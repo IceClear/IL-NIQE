@@ -19,3 +19,7 @@ You can train your own model via training.m in the Matlab version.
 For Matlab, it uses parpool for multiprocessing and is much faster than python, which adopts ray module for multiprocessing.
 
 As for the accuracy, generally, the differences is between [-2, 2]. The main reason may be due to the precision of float computing and different results of similar functions of Matlab and Python, i.e., imresize and conv2. After comparision, I have found some lines where generate different results, it can be more accuracy if you can provide a better function to replace the current one:
+
+- [imresize function:](https://github.com/IceClear/IL-NIQE/blob/master/IL-NIQE.py#L249) The difference between the imresize function between cv2 and Matlab seems affect the results the most. I strongly suggest to crop the image to [524, 524] instead of resize it.
+- [conv2:](https://github.com/IceClear/IL-NIQE/blob/master/IL-NIQE.py#L272) This function is slightly different from Matlab, which may result in [-2, +2] difference.
+- [mean:](https://github.com/IceClear/IL-NIQE/blob/master/IL-NIQE.py#L110) The mean of numpy is also different from the mean2() function in Matlab, this may be due to float precision.
