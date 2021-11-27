@@ -1,6 +1,6 @@
 # IL-NIQE (A Feature-Enriched Completely Blind Image Quality Evaluator)
 
-This is the python implement for [IL-NIQE](http://www4.comp.polyu.edu.hk/~cslzhang/paper/IL-NIQE.pdf). The official Matlab version can be downloaded [here](http://live.ece.utexas.edu/research/Quality/blind.htm) or found from the [release]()
+This is the python implement for [IL-NIQE](http://www4.comp.polyu.edu.hk/~cslzhang/paper/IL-NIQE.pdf). The official Matlab version can be downloaded [here](http://live.ece.utexas.edu/research/Quality/blind.htm) or found from the [release](https://github.com/IceClear/IL-NIQE/releases/tag/v1.0.0).
 
 ## Training
 
