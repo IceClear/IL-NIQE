@@ -22,8 +22,8 @@ As for the accuracy, generally, without resizing the image, the difference can b
 
 After comparision, I have found some lines which generate different results, it can be more accurate if you can provide a better function to replace the current one:
 
-- [imresize function:](https://github.com/IceClear/IL-NIQE/blob/master/IL-NIQE.py#L249) The difference between the imresize function between cv2 and Matlab seems affect the results the most. I strongly suggest to crop the image to [524, 524] instead of resize it.
-- [mean:](https://github.com/IceClear/IL-NIQE/blob/master/IL-NIQE.py#L110) when the number is very small (<1e10-15), this function will fail due to the limit of float64.
+- [imresize function:](https://github.com/IceClear/IL-NIQE/blob/master/IL-NIQE.py#L249) The difference between the imresize function between cv2 and Matlab seems affect the results the most. I strongly suggest to crop the image to [524, 524] instead of resizing it.
+- [mean:](https://github.com/IceClear/IL-NIQE/blob/master/IL-NIQE.py#L110) When the number is very small (<1e-15), this function will fail due to the limit of float64.
 - [var:](https://github.com/IceClear/IL-NIQE/blob/master/IL-NIQE.py#L111) The varience of numpy is also different from the var() function in Matlab, The difference is usually smaller than 1e-3.
 
 Currently, it is not clear yet whether the above reasons lead to the different results. Any suggestions are welcomed.
