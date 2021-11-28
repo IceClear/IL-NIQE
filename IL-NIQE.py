@@ -11,7 +11,7 @@ from scipy.stats import exponweib
 from scipy.optimize import fmin
 
 import time
-import ray
+# import ray
 
 def reorder_image(img, input_order='HWC'):
     """Reorder images to 'HWC' order.
@@ -111,7 +111,6 @@ def compute_feature(feature_list, block_posi):
         sigmaSquare = np.var(data.flatten('F'))
         feat.extend([mu, sigmaSquare])
 
-
     for i in range(7,85):
         data = feature_list[i][block_posi[0]:block_posi[1], block_posi[2]:block_posi[3]]
         alpha_data, beta_l_data, beta_r_data = estimate_aggd_param(data)
@@ -198,7 +197,7 @@ def logGabors(rows, cols, minWaveLength, sigmaOnf, mult, dThetaOnSigma):
         filter.append(o_list)
     return filter
 
-@ray.remote
+# @ray.remote
 def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData, block_size_h=84, block_size_w=84):
     """Calculate IL-NIQE (Integrated Local Natural Image Quality Evaluator) metric.
 
@@ -246,7 +245,7 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
     infConst = 10000
     nanConst = 2000
 
-    img = cv2.resize(img, (normalizedWidth, normalizedWidth),interpolation=cv2.INTER_AREA)
+    # img = cv2.resize(img, (normalizedWidth, normalizedWidth),interpolation=cv2.INTER_AREA)
     h, w, _ = img.shape
 
     num_block_h = math.floor(h / block_size_h)
@@ -269,7 +268,7 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
         structdis = (O3 - mu) / (sigma + 1)
 
         dx, dy = gauDerivative(sigmaForGauDerivative/(scale**scaleFactorForGaussianDer));
-        compRes = conv2(O1, dx + 1j*dy, 'same')  # about +-2 different from MATLab version
+        compRes = conv2(O1, dx + 1j*dy, 'same')
         IxO1 = np.real(compRes)
         IyO1 = np.imag(compRes)
         GMO1 = np.sqrt(IxO1**2 + IyO1**2) + np.finfo(O1.dtype).eps
@@ -344,18 +343,18 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
         distparam.append(np.array(feat))
         gauForDS = matlab_fspecial([math.ceil(6*sigmaForDownsample), math.ceil(6*sigmaForDownsample)], sigmaForDownsample)
         filterResult = convolve(O1, gauForDS, mode='nearest')
-        O1 = filterResult[1::2,1::2]
+        O1 = filterResult[0::2,0::2]
         filterResult = convolve(O2, gauForDS, mode='nearest')
-        O2 = filterResult[1::2,1::2]
+        O2 = filterResult[0::2,0::2]
         filterResult = convolve(O3, gauForDS, mode='nearest')
-        O3 = filterResult[1::2,1::2]
+        O3 = filterResult[0::2,0::2]
 
         filterResult = convolve(RChannel, gauForDS, mode='nearest')
-        RChannel = filterResult[1::2,1::2]
+        RChannel = filterResult[0::2,0::2]
         filterResult = convolve(GChannel, gauForDS, mode='nearest')
-        GChannel = filterResult[1::2,1::2]
+        GChannel = filterResult[0::2,0::2]
         filterResult = convolve(BChannel, gauForDS, mode='nearest')
-        BChannel = filterResult[1::2,1::2]
+        BChannel = filterResult[0::2,0::2]
 
     distparam = np.concatenate(distparam, axis=1)
     distparam = np.array(distparam)
@@ -426,22 +425,24 @@ def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, **kwargs):
     # round is necessary for being consistent with MATLAB's result
     img = img.round()
 
-    ray.init(num_cpus=num_cpus)
-    task_id = ilniqe.remote(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData)
-    ilniqe_result = ray.get(task_id)
+    # ray.init(num_cpus=num_cpus)
+    # task_id = ilniqe.remote(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData)
+    # ilniqe_result = ray.get(task_id)
+
+    ilniqe_result = ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData)
 
     return ilniqe_result
 
 if __name__ == '__main__':
     import warnings
 
-    img_path = './pepper_exa/pepper_4.png'
+    img_path = './pepper_exa/pepper_0.png'
     img = cv2.imread(img_path)
     with warnings.catch_warnings():
         warnings.simplefilter('ignore', category=RuntimeWarning)
         time_start = time.time()
 
-        niqe_result = calculate_ilniqe(img, 0, input_order='HWC', num_cpus=3)
+        niqe_result = calculate_ilniqe(img, 0, input_order='HWC')
 
         time_used = time.time() - time_start
     print(niqe_result)
