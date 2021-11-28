@@ -198,7 +198,7 @@ def logGabors(rows, cols, minWaveLength, sigmaOnf, mult, dThetaOnSigma):
     return filter
 
 # @ray.remote
-def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData, block_size_h=84, block_size_w=84):
+def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData, resize=True, block_size_h=84, block_size_w=84):
     """Calculate IL-NIQE (Integrated Local Natural Image Quality Evaluator) metric.
 
     Ref: A Feature-Enriched Completely Blind Image Quality Evaluator.
@@ -245,7 +245,8 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
     infConst = 10000
     nanConst = 2000
 
-    # img = cv2.resize(img, (normalizedWidth, normalizedWidth),interpolation=cv2.INTER_AREA)
+    if resize:
+        img = cv2.resize(img, (normalizedWidth, normalizedWidth),interpolation=cv2.INTER_AREA)
     h, w, _ = img.shape
 
     num_block_h = math.floor(h / block_size_h)
@@ -384,7 +385,7 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
     score = np.mean(np.array(dist))
     return score
 
-def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, **kwargs):
+def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, resize=True, **kwargs):
     """Calculate IL-NIQE (Integrated Local Natural Image Quality Evaluator) metric.
 
     Args:
@@ -429,7 +430,7 @@ def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, **kwargs):
     # task_id = ilniqe.remote(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData)
     # ilniqe_result = ray.get(task_id)
 
-    ilniqe_result = ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData)
+    ilniqe_result = ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData, resize)
 
     return ilniqe_result
 
