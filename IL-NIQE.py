@@ -227,8 +227,7 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
     """
     assert img.ndim == 3, ('Input image must be a color image with shape (h, w, c).')
     # crop image
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = img.astype(np.float64)
+    # img = img.astype(np.float64)
     blockrowoverlap = 0
     blockcoloverlap = 0
     sigmaForGauDerivative = 1.66
@@ -413,7 +412,9 @@ def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, resize=Tru
     meanOfSampleData = model_mat['templateModel'][0][2]
     principleVectors = model_mat['templateModel'][0][3]
 
-    img = img.astype(np.float32)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = img.astype(np.float64)
+
     if input_order != 'HW':
         img = reorder_image(img, input_order=input_order)
         img = np.squeeze(img)
@@ -443,7 +444,7 @@ if __name__ == '__main__':
         warnings.simplefilter('ignore', category=RuntimeWarning)
         time_start = time.time()
 
-        niqe_result = calculate_ilniqe(img, 0, input_order='HWC')
+        niqe_result = calculate_ilniqe(img, 0, input_order='HWC', resize=False)
 
         time_used = time.time() - time_start
     print(niqe_result)
