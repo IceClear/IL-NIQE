@@ -209,6 +209,7 @@ def train(data_path):
     sigmaForGauDerivative = 1.66
     KforLog = 0.00001
     normalizedWidth = 524
+    # normalizedWidth = 168
     minWaveLength = 2.4
     sigmaOnf = 0.55
     mult = 1.31
@@ -353,12 +354,13 @@ def train(data_path):
         distparam = np.concatenate(distparam, axis=1)
         pic_features.append(np.array(distparam))
         pic_sharpness.append(sharpness)
+        print(img_file, flush=True)
 
     prisparam = []
     for i in range(len(pic_features)):
         cur_distparam = pic_features[i]
         cur_sharpness = pic_sharpness[i]
-        InfIndicator = np.sum(np.isinf(feat),axis=1)
+        InfIndicator = np.sum(np.isinf(cur_distparam),axis=1)
         InfIndicator = np.where(InfIndicator>0, 1, 0)
         cur_sharpness = np.array(cur_sharpness)*(1-InfIndicator)
         feat = cur_distparam[np.where(cur_sharpness>sh_th*np.max(cur_sharpness))]
