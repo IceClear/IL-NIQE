@@ -384,7 +384,7 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
     score = np.mean(np.array(dist))
     return score
 
-def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, resize=True, **kwargs):
+def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, resize=True, version='python', **kwargs):
     """Calculate IL-NIQE (Integrated Local Natural Image Quality Evaluator) metric.
 
     Args:
@@ -406,7 +406,11 @@ def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, resize=Tru
     gaussian_window = matlab_fspecial((5,5),5/6)
     gaussian_window = gaussian_window/np.sum(gaussian_window)
 
-    model_mat = scipy.io.loadmat(os.path.join(ROOT_DIR,'templateModel.mat'))
+    if version == 'python':
+        model_mat = scipy.io.loadmat(os.path.join(ROOT_DIR,'python_templateModel.mat')) # trained using python code
+    else:
+        model_mat = scipy.io.loadmat(os.path.join(ROOT_DIR,'templateModel.mat')) #trained using official Matlab
+
     mu_pris_param = model_mat['templateModel'][0][0]
     cov_pris_param = model_mat['templateModel'][0][1]
     meanOfSampleData = model_mat['templateModel'][0][2]
@@ -438,13 +442,13 @@ def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, resize=Tru
 if __name__ == '__main__':
     import warnings
 
-    img_path = './pepper_exa/pepper_0.png'
+    img_path = './pepper_exa/pepper_4.png'
     img = cv2.imread(img_path)
     with warnings.catch_warnings():
         warnings.simplefilter('ignore', category=RuntimeWarning)
         time_start = time.time()
 
-        niqe_result = calculate_ilniqe(img, 0, input_order='HWC', resize=False)
+        niqe_result = calculate_ilniqe(img, 0, input_order='HWC', resize=True, version='python')
 
         time_used = time.time() - time_start
     print(niqe_result)

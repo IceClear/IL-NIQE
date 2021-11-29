@@ -20,13 +20,13 @@ You can also train your own model via training.m in the Matlab version. But the 
 
 ## Results
 
-|Image|IL-NIQE (Matlab/Python)|IL-NIQE (w/o imresize) (Matlab/Python)|Time(sec) (Matlab/Python)|
-|:-|:-|:-|:-|
-|pepper_0.png|29.1422 / 27.3655|38.7078 / 38.9319|9.9567 / 103.4350|
-|pepper_1.png|36.9637 / 39.0683|36.6869 / 37.0163|9.7487 / 90.1218|
-|pepper_2.png|29.5075 / 31.5751|28.7137 / 28.6329|10.3733 / 103.6504|
-|pepper_3.png|78.0557 / 58.6855|92.3750 / 92.9693|10.5093 / 97.8555|
-|pepper_4.png|46.8697 / 54.2524|46.4926 / 46.8856|9.7452 / 103.4113|
+|Image|IL-NIQE (using official .mat, Matlab/Python)|IL-NIQE (using .mat trained in python, Matlab/Python)|IL-NIQE (w/o imresize) (Matlab/Python)|Time(sec) (Matlab/Python)|
+|:-|:-|:-|:-|:-|
+|pepper_0.png|29.1422 / 27.3655|28.1166|38.7078 / 38.9319|9.9567 / 103.4350|
+|pepper_1.png|36.9637 / 39.0683|38.7309|36.6869 / 37.0163|9.7487 / 90.1218|
+|pepper_2.png|29.5075 / 31.5751|29.5121|28.7137 / 28.6329|10.3733 / 103.6504|
+|pepper_3.png|78.0557 / 58.6855|49.9387|92.3750 / 92.9693|10.5093 / 97.8555|
+|pepper_4.png|46.8697 / 54.2524|41.9770|46.4926 / 46.8856|9.7452 / 103.4113|
 
 For Matlab, it uses parpool for multiprocessing and is much faster than python. This implement supports multiprocessing via ray.
 
