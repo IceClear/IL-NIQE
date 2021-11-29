@@ -2,9 +2,21 @@
 
 This is the python implement for [IL-NIQE](http://www4.comp.polyu.edu.hk/~cslzhang/paper/IL-NIQE.pdf). The official Matlab version can be downloaded [here](http://live.ece.utexas.edu/research/Quality/blind.htm) or found from the [release](https://github.com/IceClear/IL-NIQE/releases/tag/v1.0.0).
 
-## Training
+## Get Started
 
-You can train your own model via training.m in the Matlab version.
+* Test:
+
+```bash
+python IL-NIQE.py
+```
+
+* Train
+
+```bash
+python train.py
+```
+
+You can also train your own model via training.m in the Matlab version. But the results can be different due to the imresize function.
 
 ## Results
 

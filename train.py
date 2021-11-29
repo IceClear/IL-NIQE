@@ -14,16 +14,14 @@ import time
 
 def MyPCA(sampleData, reservedRatio):
     principleVectors = []
-    meanOfSampleData = np.mean(sampleData, axis=1, keepdims=False)
+    meanOfSampleData = np.mean(sampleData, axis=1, keepdims=True)
     meanMatrix = np.tile(meanOfSampleData,(1,sampleData.shape[1]))
-    sampleData = sampleData[:,:,0]
     centerlizedData = sampleData - meanMatrix
 
     covarianceMatrix = np.matmul(centerlizedData.T, centerlizedData)
     subSpaceDim = min(sampleData.shape)
     reservedPCs = math.floor(subSpaceDim*reservedRatio)
     d, tmpEigVectors = sla.eigs(covarianceMatrix,subSpaceDim)
-    tmpEigVectors = tmpEigVectors[:, [0,2,3,1]] # keep similar to Matlab
 
     eigVectors = np.matmul(centerlizedData, tmpEigVectors[:,0:reservedPCs])
     for pcIndex in range(reservedPCs):
@@ -209,7 +207,6 @@ def train(data_path):
     sigmaForGauDerivative = 1.66
     KforLog = 0.00001
     normalizedWidth = 524
-    # normalizedWidth = 168
     minWaveLength = 2.4
     sigmaOnf = 0.55
     mult = 1.31
@@ -225,6 +222,7 @@ def train(data_path):
 
     pic_features = []
     pic_sharpness = []
+
     for img_file in trainingFiles:
         img = cv2.imread(os.path.join(data_path, img_file))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -356,7 +354,7 @@ def train(data_path):
         pic_sharpness.append(sharpness)
         print(img_file, flush=True)
 
-    prisparam = []
+    prisparam = None
     for i in range(len(pic_features)):
         cur_distparam = pic_features[i]
         cur_sharpness = pic_sharpness[i]
@@ -364,7 +362,10 @@ def train(data_path):
         InfIndicator = np.where(InfIndicator>0, 1, 0)
         cur_sharpness = np.array(cur_sharpness)*(1-InfIndicator)
         feat = cur_distparam[np.where(cur_sharpness>sh_th*np.max(cur_sharpness))]
-        prisparam.append(feat)
+        if prisparam is None:
+            prisparam = np.array(feat)
+        else:
+            prisparam = np.concatenate((prisparam, feat), axis=1)
 
     dataInHighDim = np.array(prisparam).T
     principleVectors, meanOfSampleData, projectionOfTrainingData = MyPCA(dataInHighDim,reservedRatio)
