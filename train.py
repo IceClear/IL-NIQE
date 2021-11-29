@@ -365,9 +365,9 @@ def train(data_path):
         if prisparam is None:
             prisparam = np.array(feat)
         else:
-            prisparam = np.concatenate((prisparam, feat), axis=1)
+            prisparam = np.concatenate((prisparam, feat), axis=0)
 
-    dataInHighDim = np.array(prisparam).T
+    dataInHighDim = prisparam.T
     principleVectors, meanOfSampleData, projectionOfTrainingData = MyPCA(dataInHighDim,reservedRatio)
 
     prisparam = projectionOfTrainingData.T
