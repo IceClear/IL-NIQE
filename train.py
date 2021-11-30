@@ -376,10 +376,10 @@ def train(data_path):
     cov_prisparam = np.cov(prisparam_no_nan, rowvar=False)
 
     templateModel = []
-    templateModel.append(np.real(mu_prisparam) if isinstance(mu_prisparam,complex) else mu_prisparam)
-    templateModel.append(np.real(cov_prisparam) if isinstance(cov_prisparam,complex) else cov_prisparam)
-    templateModel.append(np.real(meanOfSampleData) if isinstance(meanOfSampleData,complex) else meanOfSampleData)
-    templateModel.append(np.real(principleVectors) if isinstance(principleVectors,complex) else principleVectors)
+    templateModel.append(mu_prisparam)
+    templateModel.append(cov_prisparam)
+    templateModel.append(meanOfSampleData)
+    templateModel.append(principleVectors)
 
     scipy.io.savemat('./python_templateModel.mat', {'templateModel':[templateModel]})
 

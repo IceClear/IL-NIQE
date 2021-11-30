@@ -20,7 +20,7 @@ You can also train your own model via training.m in the Matlab version. But the 
 
 ## Results
 
-|Image|IL-NIQE (using official .mat, Matlab/Python)|IL-NIQE (using .mat trained in python, Matlab/Python)|IL-NIQE (w/o imresize) (Matlab/Python)|Time(sec) (Matlab/Python)|
+|Image|IL-NIQE (using official .mat) (Matlab/Python)|IL-NIQE (using .mat trained in python) (Python)|IL-NIQE (w/o imresize) (Matlab/Python)|Time(sec) (Matlab/Python)|
 |:-|:-|:-|:-|:-|
 |pepper_0.png|29.1422 / 27.3655|28.1166|38.7078 / 38.9319|9.9567 / 103.4350|
 |pepper_1.png|36.9637 / 39.0683|38.7309|36.6869 / 37.0163|9.7487 / 90.1218|

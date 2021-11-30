@@ -245,7 +245,7 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
     nanConst = 2000
 
     if resize:
-        img = cv2.resize(img, (normalizedWidth, normalizedWidth),interpolation=cv2.INTER_AREA)
+        img = cv2.resize(img, (normalizedWidth, normalizedWidth), interpolation=cv2.INTER_AREA)
     h, w, _ = img.shape
 
     num_block_h = math.floor(h / block_size_h)
@@ -436,6 +436,9 @@ def calculate_ilniqe(img, crop_border, input_order='HWC', num_cpus=3, resize=Tru
     # ilniqe_result = ray.get(task_id)
 
     ilniqe_result = ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors, meanOfSampleData, resize)
+
+    if isinstance(ilniqe_result, complex) and ilniqe_result.imag == 0:
+        ilniqe_result = ilniqe_result.real
 
     return ilniqe_result
 
