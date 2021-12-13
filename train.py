@@ -11,6 +11,8 @@ import scipy.io
 from scipy.stats import exponweib
 from scipy.optimize import fmin
 import time
+from matlab_resize import MATLABLikeResize
+from tqdm import tqdm
 
 def MyPCA(sampleData, reservedRatio):
     principleVectors = []
@@ -218,17 +220,20 @@ def train(data_path):
     gaussian_window = matlab_fspecial((5,5),5/6)
     gaussian_window = gaussian_window/np.sum(gaussian_window)
 
-    trainingFiles = os.listdir(data_path)
+    trainingFiles = sorted(os.listdir(data_path))
 
     pic_features = []
     pic_sharpness = []
 
-    for img_file in trainingFiles:
+    for img_file in tqdm(trainingFiles):
         img = cv2.imread(os.path.join(data_path, img_file))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = img.astype(np.float64)
         img = img.round()
-        img = cv2.resize(img, (normalizedWidth, normalizedWidth),interpolation=cv2.INTER_AREA)
+        # img = cv2.resize(img, (normalizedWidth, normalizedWidth),interpolation=cv2.INTER_AREA)
+        resize_func = MATLABLikeResize(output_shape=(normalizedWidth, normalizedWidth))
+        img = resize_func.resize_img(img)
+        img = np.clip(img, 0.0, 255.0)
 
         h, w, _ = img.shape
 
@@ -352,7 +357,6 @@ def train(data_path):
         distparam = np.concatenate(distparam, axis=1)
         pic_features.append(np.array(distparam))
         pic_sharpness.append(sharpness)
-        print(img_file, flush=True)
 
     prisparam = None
     for i in range(len(pic_features)):

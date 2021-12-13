@@ -12,6 +12,7 @@ from scipy.optimize import fmin
 
 import time
 # import ray
+from matlab_resize import MATLABLikeResize
 
 def reorder_image(img, input_order='HWC'):
     """Reorder images to 'HWC' order.
@@ -245,7 +246,11 @@ def ilniqe(img, mu_pris_param, cov_pris_param, gaussian_window, principleVectors
     nanConst = 2000
 
     if resize:
-        img = cv2.resize(img, (normalizedWidth, normalizedWidth), interpolation=cv2.INTER_AREA)
+        # img = cv2.resize(img, (normalizedWidth, normalizedWidth), interpolation=cv2.INTER_AREA)
+        resize_func = MATLABLikeResize(output_shape=(normalizedWidth, normalizedWidth))
+        img = resize_func.resize_img(img)
+        img = np.clip(img, 0.0, 255.0)
+
     h, w, _ = img.shape
 
     num_block_h = math.floor(h / block_size_h)
